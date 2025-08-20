@@ -1,0 +1,12 @@
+﻿@model TestViewModel
+@{
+    ViewData["Title"] = "Test Page";
+}
+
+<h1>Hello from TestController</h1>
+<h2>O meu nome é @Model.Name</h2>
+
+@if(Model.DateOfBirth.HasValue)
+{
+    <p>Data de nascimento: @Model.DateOfBirth.Value.ToString("dd/MM/yyyy")</p>
+}
