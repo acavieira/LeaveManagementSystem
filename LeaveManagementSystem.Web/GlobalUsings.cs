@@ -16,3 +16,4 @@ global using Microsoft.AspNetCore.Mvc.RazorPages;
 global using Microsoft.AspNetCore.WebUtilities;
 global using Microsoft.Extensions.Logging;
 global using LeaveManagementSystem.Web.Common;
+global using LeaveManagementSystem.Web.Services.LeaveRequests;

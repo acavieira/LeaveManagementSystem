@@ -10,5 +10,7 @@ namespace LeaveManagementSystem.Web.Services.LeaveAllocations
 
         Task<EmployeeAllocationVM> GetEmployeeAllocations(string? userId);
         Task<List<EmployeeListVM>> GetEmployees();
+        Task<LeaveAllocation> GetCurrentAllocation(int leaveTypeId, string employeeId);
+
     }
 }
