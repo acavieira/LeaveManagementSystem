@@ -1,0 +1,96 @@
+﻿@model EmployeeAllocationVM
+@{
+    ViewData["Title"] = "Leave Allocation";
+    var isAdmin = User.IsInRole(Roles.Administrator);
+    string message = isAdmin ? "There are no allocations" : "You have no allocations.Please contact your administrator.";
+}
+
+<h1>View Allocations for @Model.FirstName @Model.LastName</h1>
+<br />
+@if (isAdmin)
+{
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+    <br />
+}
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.FirstName)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.FirstName)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.LastName)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.LastName)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.DataOfBirth)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.DataOfBirth)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Email)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(m => m.Email)</dd>
+    </dl>
+</div>
+<hr />
+@if (isAdmin && !Model.IsCompletedAllocation)
+{    
+    <form asp-action ="AllocateLeave">
+        <input type="hidden" asp-for="@Model.Id" />
+        <input type="submit" value="Allocate Leave" class="btn btn-warning" />
+    </form>
+    <br />
+    <br />
+}
+@if(Model.LeaveAllocations.Any()){
+<div class="card">
+    <div class="card-header">
+        <h4>Leave Allocations for period @Model.LeaveAllocations[0].Period.Name</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <div class="row fw-bold">
+                <div class="col-3">Leave Name</div>
+                <div class="col-3 text-center">Original Allocation</div>
+                <div class="col-3 text-center">Current Allocation</div>
+                <div class="col-3 text-end">Action</div>
+            </div>
+        </li>
+
+        @foreach (var allocation in Model.LeaveAllocations)
+        {
+            <li class="list-group-item">
+                <div class="row align-items-center">
+                    <div class="col-3 fw-bold">
+                        @allocation.LeaveType?.Name
+                    </div>
+                    <div class="col-3 text-center">
+                        <span class="badge rounded-pill bg-primary">
+                            @allocation.Days
+                        </span>
+                    </div>
+                    <div class="col-3 text-center">
+                        <span class="badge rounded-pill bg-warning text-dark">
+                            @allocation.Days
+                        </span>
+                    </div>
+
+                    <div class="col-3 text-end">
+                            @if (isAdmin)
+                            {
+                                <a class="btn btn-warning" asp-action="EditAllocation" asp-route-id="@allocation.Id">EditAllocation</a>   
+                            }
+                            <a asp-controller="LeaveRequest"
+                           asp-action="Create"
+                           class="btn btn-sm btn-success">
+                            Request Leave
+                        </a>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        <h2>@message</h2>
+    </div>
+}
